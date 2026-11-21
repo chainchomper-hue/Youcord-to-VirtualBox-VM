@@ -112,15 +112,15 @@ KeyMap = {
     "meta": ("e0", "5b", "e0", "db"),
 }
 
+def VBoxManage(Commands):
+    Result = subprocess.run([VBoxManagePath] + Commands, capture_output=True, text=True)
+    return Result.stdout.strip() if Result.stdout.strip() else Result.stderr.strip() if Result.stderr.strip() else "No output."
+
 def GetStatus():
     Lines = VBoxManage(["showvminfo", VirtualBoxVMName]).splitlines()
     for Line in Lines:
         if "State:" in Line:
             return Line.split("State:")[1].strip().split("(")[0].strip()
-        
-def VBoxManage(Commands):
-    Result = subprocess.run([VBoxManagePath] + Commands, capture_output=True, text=True)
-    return Result.stdout.strip() if Result.stdout.strip() else Result.stderr.strip() if Result.stderr.strip() else "No output."
 
 def StartVM():
     if GetStatus() == "running" or GetStatus() == "paused":
@@ -156,9 +156,18 @@ def RestoreVM(Argument):
     if Argument is None:
         return "No snapshot name provided. Please provide a snapshot name after the command."
     if GetStatus() == "running" or GetStatus() == "paused":
-        Output = VBoxManage(["controlvm", VirtualBoxVMName, "poweroff"])
-        Output += VBoxManage(["snapshot", VirtualBoxVMName, "restore", Argument])
-        Output += VBoxManage(["startvm", VirtualBoxVMName])
+        try:
+            Output = "1. " + VBoxManage(["controlvm", VirtualBoxVMName, "poweroff"])
+        except Exception as e:
+            Output = f"Error occurred while powering off VM: {e}"
+        try:
+            Output += "\n2. " + VBoxManage(["snapshot", VirtualBoxVMName, "restore", Argument])
+        except Exception as e:
+            Output += f"\nError occurred while restoring snapshot: {e}"
+        try:
+            Output += "\n3. " + VBoxManage(["startvm", VirtualBoxVMName])
+        except Exception as e:
+            Output += f"\nError occurred while starting VM: {e}"
     else:
         Output = VBoxManage(["snapshot", VirtualBoxVMName, "restore", Argument])
     return Output
@@ -206,6 +215,7 @@ def SendComboToVM(Argument):
     CombinedScancodes = []
     Keys = Argument.split("+")
     for Key in Keys:
+        Key = Key.lower()
         if Key in KeyMap:
             Scancodes = KeyMap[Key]
             if len(Scancodes) == 2:
@@ -240,21 +250,23 @@ def HoldKeyInVM(Argument):
     except:
         return "Invalid Time."
     if Time > 30:
-        return "Please provide a time shorter than 30 seconds."
+        return "Please provide a time equal to or shorter than 30 seconds."
+    if Time < 0:
+        return "Invalid Time."
     if not Key in KeyMap:
         return "Invalid Key."
     Scancodes = KeyMap[Key]
     if len(Scancodes) == 2:
-        VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[0]])
+        Output = "1. " + VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[0]])
         time.sleep(Time)
-        VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[1]])
+        Output += "\n2. " + VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[1]])
     if len(Scancodes) == 4:
-        VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[0]])
-        VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[1]])
+        Output = "1. " + VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[0]])
+        Output += "\n2. " + VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[1]])
         time.sleep(Time)
-        VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[2]])
-        VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[3]])
-    return f"Successfully held key \"{Key}\" for {Time} seconds."
+        Output += "\n3. " + VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[2]])
+        Output += "\n4. " + VBoxManage(["controlvm", VirtualBoxVMName, "keyboardputscancode", Scancodes[3]])
+    return Output
 
     
 

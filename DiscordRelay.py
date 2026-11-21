@@ -69,6 +69,7 @@ Input Commands:
 {CommandPrefixA} {CommandPrefixB}key \"key\" - Presses the given key in the VirtualBox VM.
 {CommandPrefixA} {CommandPrefixB}send \"text\" - Types the given text into the VirtualBox VM and presses enter.
 {CommandPrefixA} {CommandPrefixB}hold \"key, time\" - Holds the given key in the VirtualBox VM for time seconds.
+{CommandPrefixA} {CommandPrefixB}combo \"key1+key2+...+keyN\" - Presses the given keys together in the VirtualBox VM.
 
 Notes:
 
@@ -84,12 +85,17 @@ try:
     intents.message_content = True
     client = discord.Client(intents=intents)
 except:
-    print("Required Package: discord.py not installed. Please install it using pip or verify your python interpreter.")
+    print("Required Package: discord.py not installed. Please install it using pip or verify if you are using the correct python interpreter.")
+    exit(1)
 
 @client.event
 async def on_ready():
-    channel = client.get_channel(ChannelID)
-    await channel.send('Relay Ready')
+    if ChannelID is None:
+        print(f"Logged in as {client.user}. No channel ID set, accepting commands from all channels.")
+    else:
+        print(f"Logged in as {client.user}. Listening for commands in channel ID: {ChannelID}")
+        channel = client.get_channel(ChannelID)
+        await channel.send('Relay Ready')
 
 @client.event
 async def on_message(message):

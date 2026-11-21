@@ -10,7 +10,7 @@ Arguments = sys.argv[1:]
 
 
 for arg in Arguments:
-    if arg not in ["--discord", "-d", "--youtube", "-y", "--history", "-h", "--help", "-?" "--all", "-a"]:
+    if arg not in ["--discord", "-d", "--youtube", "-y", "--history", "-h", "--help", "-?", "--all", "-a"]:
         print(f"Invalid argument: {arg}. Please check the usage information with -? or --help.")
         exit(1)
 
@@ -93,9 +93,3 @@ else:
         subprocess.Popen([Terminal, "-e", "python3 YoutubeRelay.py"])
     if "--history" in Arguments or "-h" in Arguments:
         subprocess.Popen([Terminal, "-e", "python3 CommandHistoryDisplay.py"])
-
-if not ("--discord" in Arguments or "--youtube" in Arguments or "--history" in Arguments or "--all" in Arguments):
-    print("No valid arguments provided. Please check usage information with -? or --help.")
-    exit(1)
-
-    
