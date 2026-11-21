@@ -5,15 +5,15 @@ from Config import YouTubeLiveChatID, CommandPrefixA, CommandPrefixB
 import subprocess
 
 if YouTubeLiveChatID is None:
-    print("YouTubeLiveChatID is not set. Please set it in Config.py.")
+    input("YouTubeLiveChatID is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 if CommandPrefixA is None:
-    print("CommandPrefixA is not set. Please set it in Config.py")
+    input("CommandPrefixA is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 if CommandPrefixB is None:
-    print("CommandPrefixB is not set. Please set it in Config.py")
+    input("CommandPrefixB is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 def ParseCommands(Command):

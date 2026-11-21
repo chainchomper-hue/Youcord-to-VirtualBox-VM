@@ -5,11 +5,11 @@ import subprocess
 import time
 
 if VBoxManagePath is None:
-    print("VBoxManagePath is not set. Please set it in Config.py.")
+    input("VBoxManagePath is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 if VirtualBoxVMName is None:
-    print("VirtualBoxVMName is not set. Please set it in Config.py.")
+    input("VirtualBoxVMName is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 KeyMap = {

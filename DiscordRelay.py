@@ -6,15 +6,15 @@ import subprocess
 from Config import ChannelID, CommandPrefixA, CommandPrefixB, DiscordBotToken
 
 if CommandPrefixA is None:
-    print("CommandPrefixA is not set. Please set it in Config.py.")
+    input("CommandPrefixA is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 if CommandPrefixB is None:
-    print("CommandPrefixB is not set. Please set it in Config.py.")
+    input("CommandPrefixB is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 if DiscordBotToken is None:
-    print("DiscordBotToken is not set. Please set it in Config.py.")
+    input("DiscordBotToken is not set. Please set it in Config.py. Press Enter to exit.")
     exit(1)
 
 def ParseCommands(Command):
