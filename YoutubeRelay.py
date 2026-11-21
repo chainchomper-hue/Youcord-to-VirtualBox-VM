@@ -25,7 +25,11 @@ def ParseCommands(Command):
         print(f"Parsing error: {e}")
         return []
 
-    Tokens.remove(CommandPrefixA)
+    try:
+        Tokens.remove(CommandPrefixA)
+    except ValueError:
+        print("An error occurred while parsing the command. The command prefix was not found in the message. This shouldn't even be possible.")
+        return []
 
     Commands = []
     i = 0
@@ -66,9 +70,9 @@ except Exception as e:
 
 while Chat.is_alive():
     for Message in Chat.get().sync_items():
-        if Message.message.startswith(CommandPrefixA):
+        if Message.message.startswith(CommandPrefixA + " "):
             with open("CommandHistory.txt", "a") as f:
-                f.write(f" [ YOUTUBE ] {Message.datetime} [{Message.author.name}]- {Message.message}")
+                f.write(f" [ YOUTUBE ] {Message.datetime} [{Message.author.name}]- {Message.message}\n")
 
             Commands = ParseCommands(Message.message)
             

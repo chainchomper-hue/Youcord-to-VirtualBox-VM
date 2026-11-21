@@ -105,14 +105,14 @@ async def on_message(message):
     Time = str(message.created_at).split(".")[0]
     content = message.content.strip()
 
-    if not content.startswith(CommandPrefixA):
+    if not content.startswith(CommandPrefixA + " "):
         return
 
     if not message.channel.id == ChannelID and ChannelID is not None:
         return
 
     with open("CommandHistory.txt", "a") as f:
-        f.write(f" [ DISCORD ] {Time} [{message.author.name}]- {message.content}")
+        f.write(f" [ DISCORD ] {Time} [{message.author.name}]- {message.content}\n")
 
     if content.startswith(f"{CommandPrefixA} !help"):
         await message.channel.send(Help)
